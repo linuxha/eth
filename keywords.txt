@@ -1,15 +1,15 @@
 #######################################
-# Syntax Coloring Map For Ethernet
+# Syntax Coloring Map For eth
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-Ethernet	KEYWORD1	Ethernet
-EthernetClient	KEYWORD1	EthernetClient
-EthernetServer	KEYWORD1	EthernetServer
-IPAddress	KEYWORD1	EthernetIPAddress
+eth	KEYWORD1	eth
+ethClient	KEYWORD1	ethClient
+ethServer	KEYWORD1	ethServer
+IPAddress	KEYWORD1	ethIPAddress
 
 #######################################
 # Methods and Functions (KEYWORD2)

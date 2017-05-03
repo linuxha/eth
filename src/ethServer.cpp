@@ -8,32 +8,32 @@ extern "C" {
 #include "ethClient.h"
 #include "ethServer.h"
 
-EthernetServer::EthernetServer(uint16_t port)
+ethServer::ethServer(uint16_t port)
 {
   _port = port;
 }
 
-void EthernetServer::begin()
+void ethServer::begin()
 {
   for (int sock = 0; sock < MAX_SOCK_NUM; sock++) {
-    EthernetClient client(sock);
+    ethClient client(sock);
     if (client.status() == SnSR::CLOSED) {
       socket(sock, SnMR::TCP, _port, 0);
       listen(sock);
-      EthernetClass::_server_port[sock] = _port;
+      ethClass::_server_port[sock] = _port;
       break;
     }
   }  
 }
 
-void EthernetServer::accept()
+void ethServer::accept()
 {
   int listening = 0;
 
   for (int sock = 0; sock < MAX_SOCK_NUM; sock++) {
-    EthernetClient client(sock);
+    ethClient client(sock);
 
-    if (EthernetClass::_server_port[sock] == _port) {
+    if (ethClass::_server_port[sock] == _port) {
       if (client.status() == SnSR::LISTEN) {
         listening = 1;
       } 
@@ -48,13 +48,13 @@ void EthernetServer::accept()
   }
 }
 
-EthernetClient EthernetServer::available()
+ethClient ethServer::available()
 {
   accept();
 
   for (int sock = 0; sock < MAX_SOCK_NUM; sock++) {
-    EthernetClient client(sock);
-    if (EthernetClass::_server_port[sock] == _port &&
+    ethClient client(sock);
+    if (ethClass::_server_port[sock] == _port &&
         (client.status() == SnSR::ESTABLISHED ||
          client.status() == SnSR::CLOSE_WAIT)) {
       if (client.available()) {
@@ -64,25 +64,25 @@ EthernetClient EthernetServer::available()
     }
   }
 
-  return EthernetClient(MAX_SOCK_NUM);
+  return ethClient(MAX_SOCK_NUM);
 }
 
 #if defined(__PIC32MX__)
 // @FIXME - grrr, should be size_t
-void EthernetServer::write(uint8_t b) {
+void ethServer::write(uint8_t b) {
   write(&b, 1);
 }
 
-void EthernetServer::write(const uint8_t *buffer, size_t size) 
+void ethServer::write(const uint8_t *buffer, size_t size) 
 {
   size_t n = 0;
   
   accept();
 
   for (int sock = 0; sock < MAX_SOCK_NUM; sock++) {
-    EthernetClient client(sock);
+    ethClient client(sock);
 
-    if (EthernetClass::_server_port[sock] == _port &&
+    if (ethClass::_server_port[sock] == _port &&
       client.status() == SnSR::ESTABLISHED) {
 	//n += client.write(buffer, size);
       client.write(buffer, size);
@@ -92,21 +92,21 @@ void EthernetServer::write(const uint8_t *buffer, size_t size)
   //return n;
 }
 #else
-size_t EthernetServer::write(uint8_t b) 
+size_t ethServer::write(uint8_t b) 
 {
   return write(&b, 1);
 }
 
-size_t EthernetServer::write(const uint8_t *buffer, size_t size) 
+size_t ethServer::write(const uint8_t *buffer, size_t size) 
 {
   size_t n = 0;
   
   accept();
 
   for (int sock = 0; sock < MAX_SOCK_NUM; sock++) {
-    EthernetClient client(sock);
+    ethClient client(sock);
 
-    if (EthernetClass::_server_port[sock] == _port &&
+    if (ethClass::_server_port[sock] == _port &&
       client.status() == SnSR::ESTABLISHED) {
       n += client.write(buffer, size);
     }

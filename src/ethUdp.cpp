@@ -1,7 +1,7 @@
 /*
  *  Udp.cpp: Library to send/receive UDP packets with the Arduino ethernet shield.
  *  This version only offers minimal wrapping of socket.c/socket.h
- *  Drop Udp.h/.cpp into the Ethernet library directory at hardware/libraries/Ethernet/ 
+ *  Drop Udp.h/.cpp into the eth library directory at hardware/libraries/eth/ 
  *
  * MIT License:
  * Copyright (c) 2008 Bjoern Hartmann
@@ -33,10 +33,10 @@
 #include "Dns.h"
 
 /* Constructor */
-EthernetUDP::EthernetUDP() : _sock(MAX_SOCK_NUM) {}
+ethUDP::ethUDP() : _sock(MAX_SOCK_NUM) {}
 
-/* Start EthernetUDP socket, listening at local port PORT */
-uint8_t EthernetUDP::begin(uint16_t port) {
+/* Start ethUDP socket, listening at local port PORT */
+uint8_t ethUDP::begin(uint16_t port) {
   if (_sock != MAX_SOCK_NUM)
     return 0;
 
@@ -60,30 +60,30 @@ uint8_t EthernetUDP::begin(uint16_t port) {
 
 /* return number of bytes available in the current packet,
    will return zero if parsePacket hasn't been called yet */
-int EthernetUDP::available() {
+int ethUDP::available() {
   return _remaining;
 }
 
-/* Release any resources being used by this EthernetUDP instance */
-void EthernetUDP::stop()
+/* Release any resources being used by this ethUDP instance */
+void ethUDP::stop()
 {
   if (_sock == MAX_SOCK_NUM)
     return;
 
   close(_sock);
 
-  EthernetClass::_server_port[_sock] = 0;
+  ethClass::_server_port[_sock] = 0;
   _sock = MAX_SOCK_NUM;
 }
 
-int EthernetUDP::beginPacket(const char *host, uint16_t port)
+int ethUDP::beginPacket(const char *host, uint16_t port)
 {
   // Look up the host first
   int ret = 0;
   DNSClient dns;
   IPAddress remote_addr;
 
-  dns.begin(Ethernet.dnsServerIP());
+  dns.begin(eth.dnsServerIP());
   ret = dns.getHostByName(host, remote_addr);
   if (ret == 1) {
     return beginPacket(remote_addr, port);
@@ -92,43 +92,43 @@ int EthernetUDP::beginPacket(const char *host, uint16_t port)
   }
 }
 
-int EthernetUDP::beginPacket(IPAddress ip, uint16_t port)
+int ethUDP::beginPacket(IPAddress ip, uint16_t port)
 {
   _offset = 0;
   return startUDP(_sock, rawIPAddress(ip), port);
 }
 
-int EthernetUDP::endPacket()
+int ethUDP::endPacket()
 {
   return sendUDP(_sock);
 }
 
 #if defined(__PIC32MX__)
-void EthernetUDP::write(uint8_t byte) {
+void ethUDP::write(uint8_t byte) {
   return write(&byte, 1);
 }
 
 // @FIXME - all the files are Based on 1.0 Arduino, they had void (grrr)
-//size_t EthernetUDP::write(const uint8_t *buffer, size_t size) {
-void EthernetUDP::write(const uint8_t *buffer, size_t size) {
+//size_t ethUDP::write(const uint8_t *buffer, size_t size) {
+void ethUDP::write(const uint8_t *buffer, size_t size) {
   uint16_t bytes_written = bufferData(_sock, _offset, buffer, size);
   _offset += bytes_written;
   //return bytes_written;
 }
 #else
-size_t EthernetUDP::write(uint8_t byte)
+size_t ethUDP::write(uint8_t byte)
 {
   return write(&byte, 1);
 }
 
-size_t EthernetUDP::write(const uint8_t *buffer, size_t size) {
+size_t ethUDP::write(const uint8_t *buffer, size_t size) {
   uint16_t bytes_written = bufferData(_sock, _offset, buffer, size);
   _offset += bytes_written;
   return bytes_written;
 }
 #endif
 
-int EthernetUDP::parsePacket()
+int ethUDP::parsePacket()
 {
   // discard any remaining bytes in the last packet
   flush();
@@ -157,7 +157,7 @@ int EthernetUDP::parsePacket()
   return 0;
 }
 
-int EthernetUDP::read()
+int ethUDP::read()
 {
   uint8_t byte;
 
@@ -172,7 +172,7 @@ int EthernetUDP::read()
   return -1;
 }
 
-int EthernetUDP::read(unsigned char* buffer, size_t len)
+int ethUDP::read(unsigned char* buffer, size_t len)
 {
 
   if (_remaining > 0)
@@ -205,7 +205,7 @@ int EthernetUDP::read(unsigned char* buffer, size_t len)
 
 }
 
-int EthernetUDP::peek()
+int ethUDP::peek()
 {
   uint8_t b;
   // Unlike recv, peek doesn't check to see if there's any data available, so we must.
@@ -217,7 +217,7 @@ int EthernetUDP::peek()
   return b;
 }
 
-void EthernetUDP::flush()
+void ethUDP::flush()
 {
   // could this fail (loop endlessly) if _remaining > 0 and recv in read fails?
   // should only occur if recv fails after telling us the data is there, lets

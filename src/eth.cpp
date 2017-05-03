@@ -5,13 +5,13 @@
 #include "eth.h"
 #include "Dhcp.h"
 
-#error Ethernet error
+#error eth error
 // XXX: don't make assumptions about the value of MAX_SOCK_NUM.
-uint8_t EthernetClass::_state[MAX_SOCK_NUM] = { 0, };
-uint16_t EthernetClass::_server_port[MAX_SOCK_NUM] = { 0, };
+uint8_t ethClass::_state[MAX_SOCK_NUM] = { 0, };
+uint16_t ethClass::_server_port[MAX_SOCK_NUM] = { 0, };
 
 #if defined(WIZ550io_WITH_MACADDRESS)
-int EthernetClass::begin(void) {
+int ethClass::begin(void) {
   byte mac_address[6] ={0,};
   _dhcp = new DhcpClass();
 
@@ -34,7 +34,7 @@ int EthernetClass::begin(void) {
   return ret;
 }
 
-void EthernetClass::begin(IPAddress local_ip) {
+void ethClass::begin(IPAddress local_ip) {
   // Assume the DNS server will be the machine on the same network as the local IP
   // but with last octet being '1'
   IPAddress dns_server = local_ip;
@@ -42,7 +42,7 @@ void EthernetClass::begin(IPAddress local_ip) {
   begin(local_ip, dns_server);
 }
 
-void EthernetClass::begin(IPAddress local_ip, IPAddress dns_server) {
+void ethClass::begin(IPAddress local_ip, IPAddress dns_server) {
   // Assume the gateway will be the machine on the same network as the local IP
   // but with last octet being '1'
   IPAddress gateway = local_ip;
@@ -50,12 +50,12 @@ void EthernetClass::begin(IPAddress local_ip, IPAddress dns_server) {
   begin(local_ip, dns_server, gateway);
 }
 
-void EthernetClass::begin(IPAddress local_ip, IPAddress dns_server, IPAddress gateway) {
+void ethClass::begin(IPAddress local_ip, IPAddress dns_server, IPAddress gateway) {
   IPAddress subnet(255, 255, 255, 0);
   begin(local_ip, dns_server, gateway, subnet);
 }
 
-void EthernetClass::begin(IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet) {
+void ethClass::begin(IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet) {
   W5100.init();
   W5100.setIPAddress(local_ip._address);
   W5100.setGatewayIp(gateway._address);
@@ -63,7 +63,7 @@ void EthernetClass::begin(IPAddress local_ip, IPAddress dns_server, IPAddress ga
   _dnsServerAddress = dns_server;
 }
 #else
-int EthernetClass::begin(uint8_t *mac_address) {
+int ethClass::begin(uint8_t *mac_address) {
   _dhcp = new DhcpClass();
 
   // Initialise the basic info
@@ -85,7 +85,7 @@ int EthernetClass::begin(uint8_t *mac_address) {
   return ret;
 }
 
-void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip) {
+void ethClass::begin(uint8_t *mac_address, IPAddress local_ip) {
   // Assume the DNS server will be the machine on the same network as the local IP
   // but with last octet being '1'
   IPAddress dns_server = local_ip;
@@ -93,7 +93,7 @@ void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip) {
   begin(mac_address, local_ip, dns_server);
 }
 
-void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server) {
+void ethClass::begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server) {
   // Assume the gateway will be the machine on the same network as the local IP
   // but with last octet being '1'
   IPAddress gateway = local_ip;
@@ -101,12 +101,12 @@ void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dn
   begin(mac_address, local_ip, dns_server, gateway);
 }
 
-void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway) {
+void ethClass::begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway) {
   IPAddress subnet(255, 255, 255, 0);
   begin(mac_address, local_ip, dns_server, gateway, subnet);
 }
 
-void EthernetClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet) {
+void ethClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet) {
   W5100.init();
   W5100.setMACAddress(mac);
   W5100.setIPAddress(local_ip._address);
@@ -117,7 +117,7 @@ void EthernetClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server
 
 #endif
 
-int EthernetClass::maintain() {
+int ethClass::maintain() {
   int rc = DHCP_CHECK_NONE;
   if(_dhcp != NULL) {
     //we have a pointer to dhcp, use it
@@ -142,29 +142,29 @@ int EthernetClass::maintain() {
   return rc;
 }
 
-IPAddress EthernetClass::localIP() {
+IPAddress ethClass::localIP() {
   IPAddress ret;
   W5100.getIPAddress(ret.raw_address());
   return ret;
 }
 
-IPAddress EthernetClass::subnetMask()
+IPAddress ethClass::subnetMask()
 {
   IPAddress ret;
   W5100.getSubnetMask(ret.raw_address());
   return ret;
 }
 
-IPAddress EthernetClass::gatewayIP()
+IPAddress ethClass::gatewayIP()
 {
   IPAddress ret;
   W5100.getGatewayIp(ret.raw_address());
   return ret;
 }
 
-IPAddress EthernetClass::dnsServerIP()
+IPAddress ethClass::dnsServerIP()
 {
   return _dnsServerAddress;
 }
 
-EthernetClass Ethernet;
+ethClass eth;

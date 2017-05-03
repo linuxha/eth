@@ -62,7 +62,7 @@ public:
 
     //size_t printTo(Print& p) const;
 
-    friend class EthernetClass;
+    friend class ethClass;
     friend class UDP;
     friend class Client;
     friend class Server;

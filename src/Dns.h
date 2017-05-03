@@ -1,4 +1,4 @@
-// Arduino DNS client for WizNet5100-based Ethernet shield
+// Arduino DNS client for WizNet5100-based eth shield
 // (c) Copyright 2009-2010 MCQN Ltd.
 // Released under Apache License, version 2.0
 
@@ -35,7 +35,7 @@ protected:
 
     IPAddress iDNSServer;
     uint16_t iRequestId;
-    EthernetUDP iUdp;
+    ethUDP iUdp;
 };
 
 #endif

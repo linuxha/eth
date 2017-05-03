@@ -4,16 +4,16 @@
 // Missing
 #include "Server.h"
 
-class EthernetClient;
+class ethClient;
 
-class EthernetServer : 
+class ethServer : 
 public Server {
 private:
   uint16_t _port;
   void accept();
 public:
-  EthernetServer(uint16_t);
-  EthernetClient available();
+  ethServer(uint16_t);
+  ethClient available();
   virtual void begin();
 #if defined(__PIC32MX__)
   virtual void write(uint8_t);

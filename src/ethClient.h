@@ -11,11 +11,11 @@
 #include "Client.h"
 #include "IPAddress.h"
 
-class EthernetClient : public Client {
+class ethClient : public Client {
 
 public:
-  EthernetClient();
-  EthernetClient(uint8_t sock);
+  ethClient();
+  ethClient(uint8_t sock);
 
   uint8_t status();
   virtual int connect(IPAddress ip, uint16_t port);
@@ -35,10 +35,10 @@ public:
   virtual void stop();
   virtual uint8_t connected();
   virtual operator bool();
-  virtual bool operator==(const EthernetClient&);
-  virtual bool operator!=(const EthernetClient& rhs) { return !this->operator==(rhs); };
+  virtual bool operator==(const ethClient&);
+  virtual bool operator!=(const ethClient& rhs) { return !this->operator==(rhs); };
 
-  friend class EthernetServer;
+  friend class ethServer;
   
   using Print::write;
 

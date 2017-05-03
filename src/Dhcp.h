@@ -155,7 +155,7 @@ private:
   unsigned long _responseTimeout;
   unsigned long _secTimeout;
   uint8_t _dhcp_state;
-  EthernetUDP _dhcpUdpSocket;
+  ethUDP _dhcpUdpSocket;
   
   int request_DHCP_lease();
   void reset_DHCP_lease();

@@ -6,10 +6,10 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-eth	KEYWORD1	eth
-ethClient	KEYWORD1	ethClient
-ethServer	KEYWORD1	ethServer
-IPAddress	KEYWORD1	ethIPAddress
+eth	KEYWORD1
+ethClient	KEYWORD1
+ethServer	KEYWORD1
+IPAddress	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
